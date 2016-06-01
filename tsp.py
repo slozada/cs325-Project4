@@ -101,6 +101,35 @@ def hillclimb(
     
     return (num_evaluations,best_score,best)
 
+def hillclimb_and_restart(
+    init_function,
+    move_operator,
+    objective_function,
+    max_evaluations):
+    '''
+    repeatedly hillclimb until max_evaluations is reached
+    '''
+    best=None
+    best_score=0
+    
+    num_evaluations=0
+    while num_evaluations < max_evaluations:
+        remaining_evaluations=max_evaluations-num_evaluations
+        
+        evaluated,score,found=hillclimb(
+            init_function,
+            move_operator,
+            objective_function,
+            remaining_evaluations)
+        
+        num_evaluations+=evaluated
+        if score > best_score or best is None:
+            best_score=score
+            best=found
+        
+    return (num_evaluations,best_score,best)
+
+
 def init_random_tour(tour_length):
    tour=range(tour_length)
    random.shuffle(tour)
@@ -110,14 +139,14 @@ def init_random_tour(tour_length):
 #MAIN
 #############################
 move_operator = reversed_sections
-max_iterations = 500 
-filename="tsp_example_3.txt" 
+max_iterations = 40000 
+filename="test-input-5.txt" 
 cities=readinstance(filename)
 
 matrix=cartesian_matrix(cities)
 init_function=lambda: init_random_tour(len(cities))
 objective_function=lambda tour: -tour_length(matrix, tour)
-iterations,score,best=hillclimb(init_function,move_operator,objective_function,max_iterations)
+iterations,score,best=hillclimb_and_restart(init_function,move_operator,objective_function,max_iterations)
 
 print tour_length(matrix,best)
 
