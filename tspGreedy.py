@@ -42,13 +42,13 @@ def tour_length(matrix,tour):
         city_j=tour[j]
         total+=matrix[city_i,city_j]
     return total
-def greedy(matrix,tour):
+def greedy(matrix,tour,start):
 	#Starting at city 1(arbitrary vertex), the salesman chooses the nearest unvisited city (edge with lowest
 	#weight for city 1) as his next move and name it name it city 2 and mark it as visited. Repeat this process
 	#for n-2 vertices until all cities are visited.
 	greedyTour= []
-	currentCity=0	
-	tour.remove(currentCity)	
+	currentCity=tour.pop(start)	
+	#tour.remove(currentCity)	
 	greedyTour.append(currentCity)
 	distance=float("inf")
 	tmp=0
@@ -64,6 +64,19 @@ def greedy(matrix,tour):
 		currentCity=visitedCity
 	return greedyTour 
 
+
+def greedyBest(matrix,cities):
+	distance=float("inf")
+	bestpath=[]
+	for i in xrange(len(cities)):
+		tour=list(xrange(len(cities)))
+		path=greedy(matrix,tour,i)
+		length=tour_length(matrix,path)
+		if (length<distance):
+			distance=length
+			bestpath=path
+	return bestpath,distance 
+
 #############################
 #MAIN
 #############################
@@ -77,13 +90,10 @@ cities=readinstance(filename)
 
 #Build distance matrix for all cities
 matrix=cartesian_matrix(cities)
-
 #Find greedy tour
 tour=list(xrange(len(cities)))
-greedyTour=greedy(matrix,tour)
-tourLen=tour_length(matrix,greedyTour)
+greedyTour,tourLen=greedyBest(matrix,cities)
 output = filename + ".tour"
-
 #Print Results to file where the first line is the length of the tour computed by program and city
 #identifier in order they were visited  
 fo=open(output,"a")
@@ -91,3 +101,4 @@ fo.write(str(tourLen)+ "\n")
 for city in  greedyTour:
 	 fo.write(str(city) + "\n")
 fo.close
+
