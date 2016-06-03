@@ -66,6 +66,8 @@ def greedy(matrix,tour,start):
 
 
 def greedyBest(matrix,cities):
+#Runs greedy NN algorithm starting at each possible city.Chooses the best path for
+#all possible stating cities 
 	distance=float("inf")
 	bestpath=[]
 	for i in xrange(len(cities)):
@@ -92,7 +94,12 @@ cities=readinstance(filename)
 matrix=cartesian_matrix(cities)
 #Find greedy tour
 tour=list(xrange(len(cities)))
-greedyTour,tourLen=greedyBest(matrix,cities)
+if len(cities<400):
+	greedyTour,tourLen=greedyBest(matrix,cities)
+else:
+	greedyTour=greedy(matrix,tour,0)
+	tourLen=tour_length(matrix,greedyTour)	
+
 output = filename + ".tour"
 #Print Results to file where the first line is the length of the tour computed by program and city
 #identifier in order they were visited  
