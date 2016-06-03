@@ -94,7 +94,7 @@ cities=readinstance(filename)
 matrix=cartesian_matrix(cities)
 #Find greedy tour
 tour=list(xrange(len(cities)))
-if len(cities<400):
+if len(cities)<400:
 	greedyTour,tourLen=greedyBest(matrix,cities)
 else:
 	greedyTour=greedy(matrix,tour,0)
